@@ -43,6 +43,7 @@ def get_users(request):
 def delete_people(request):
     db.session.delete(self)
 
+
 @api.route('/api/planets', methods=['POST'])
 def create_planet(request):
     request_body = request.get_json(),
@@ -67,7 +68,9 @@ def get_planets(request):
 def delete_planet(request):
     db.session.delete(self)
 
-@api.route('/api/people', methods=['POST')
+
+
+@api.route('/api/people', methods=['POST'])
 def create_person(request):
     request_body = request.get_json(),
     new_person = Person(
