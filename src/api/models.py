@@ -37,3 +37,21 @@ class Planets(db.Model):
         "terrain": self.terrain,
         "climate": self.climate
         }
+
+class People(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(120), nullable=False)
+    gender = db.Column(db.String(15), nullable=False)
+    eye_color = db.Column(db.String(25), nullable=False)
+    skin_color = db.Column(db.String(25), nullable=False)
+    height = db.Column(db.String(25), nullable=False)
+
+    def serialize(self):
+        return {
+        "id": self.id,
+        "name": self.name,
+        "gender": self.gender,
+        "eye_color": self.eye_color,
+        "skin_color": self.skin_color,
+        "height": self.height
+        }

@@ -38,3 +38,31 @@ def get_users(request):
     userList = list(map(lambda x: x.serialize, allUsers))
     
     return jsonify(userList), 200
+
+@api.route('/api/users', methods=['DELETE'])
+def delete_people(request):
+    db.session.delete(self)
+
+@api.route('/api/planets', methods=['POST'])
+def create_planet(request):
+    request_body = request.get_json(),
+    new_planet = Planet(
+        name=request_body['name'],
+        population=request_body['population'],
+        terrain=request_body['terrain'],
+        climate=request_body['climate'],
+    )
+    db.session.add(new_planet)
+    db.session.commit()
+    return f"A new planet has been added"
+
+@api.route('/api/planets', methods=['GET'])
+def get_planets(request):
+    allPlanets = Planet.query.all()
+    planetList = list(map(lambda x: x.serialize, allPlanets))
+    
+    return jsonify(planetList), 200
+
+@api.route('/api/planet/delete', methods=['DELETE'])
+def delete_planet(request):
+    db.session.delete(self)
