@@ -39,9 +39,28 @@ def get_users(request):
     
     return jsonify(userList), 200
 
-@api.route('/api/users', methods=['DELETE'])
-def delete_people(request):
-    db.session.delete(self)
+@api.route('/api/users/<int:user_id>', methods=['GET'])
+def get_one_user(user_id):
+    user = User.query.get(user.id)
+    return jsonify(user.serialize()), 200
+
+@api.route('/api/users/<int:user_id>', methods=['PUT'])
+def update_one_user(user_id):
+    if first_name in request.body:
+        user.first_name = request.body["first_name"]
+    if last_name in request.body:
+        user.last_name = request.body["last_name"]
+    if "email" in request.body:
+        user.email = request.body["email"]
+    db.session.commit()
+    return jsonify(user.serialize()), 200  
+
+@api.route('/api/users/<int:user_id>', methods=['DELETE'])
+def delete_people(user_id):
+    user = User.query.get(user_id)
+    db.session.delete(user)
+    db.serssion.commit()
+    return f"a user has been deleted"
 
 
 @api.route('/api/planets', methods=['POST'])
@@ -61,14 +80,14 @@ def create_planet(request):
 def get_planets(request):
     allPlanets = Planet.query.all()
     planetList = list(map(lambda x: x.serialize, allPlanets))
-    
     return jsonify(planetList), 200
 
-@api.route('/api/planet/delete', methods=['DELETE'])
+@api.route('/api/planet/<int:planet_id>', methods=['DELETE'])
 def delete_planet(request):
-    db.session.delete(self)
-
-
+    planet = Planet.query.get(planet_id)
+    db.session.delete(planet)
+    db.session.commit()
+    return f"A planet has been deleted"
 
 @api.route('/api/people', methods=['POST'])
 def create_person(request):
@@ -90,7 +109,50 @@ def get_people(request):
     personList = list(map(lambda x: x.serialize, allPeople))
     return jsonify(personList), 200
 
-@api.route('/api/people/delete', methods=['DELETE'])
-def delete_person(request):
-    db.session.delete(self)
-    return f"A new person has been deleted"
+@api.route('/api/people/<int:people_id>', methods=['DELETE'])
+def delete_person(people_id):
+    people = People.query.get(people_id)
+    db.session.delete(people)
+    db.session.commit()
+    return f"A person has been deleted"
+
+@api.route('/api/favorite/planet/<int:planet_id>', methods=['POST'])
+def create_favorite_planet(planet_id):
+    request_body = request.get_json(),
+    new_planet = Planet.query.get(planet_id)(
+        name=request_body['name'],
+        population=request_body['population'],
+        terrain=request_body['terrain'],
+        climate=request_body['climate'],
+    )
+    db.session.add(new_planet)
+    db.session.commit()
+    return f"A new favorite planet has been added"
+
+@api.route('/api/favorite/planet/<int:planet_id>', methods=['DELETE'])
+def delete_favorite_planet(request):
+    planet = Planet.query.get(planet_id)
+    db.session.delete(planet)
+    db.session.commit()
+    return f"a favorite planet has been deleted"
+
+@api.route('/api/favorite/people/<int:person_id>', methods=['POST'])
+def create_favorite_people(person_id):
+    request.body = request.get_json()
+    new_favroite_person = People.query.get(person_id)(
+        name = request_body['name'],
+        gender = request_body['gender'],
+        skin_color = request_body['skin_color'],
+        eye_color = request_body['eye_color'],
+        height = request_body['height']
+    )
+    db.session.add(new_favroite_person)
+    db.session.commit()
+    return f"a new favorite person has been added"
+
+@api.route('/api/favorite/people/<int:person_id>', methods=['DELETE'])
+def delete_favorite_people(request):
+    people = People.query.get(person_id)
+    db.session.delete(people)
+    db.session.commit()
+    return f"a favorite person has been deleted"
