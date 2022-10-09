@@ -3,6 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 db = SQLAlchemy()
 
 class User(db.Model):
+    __tablename__ = 'User'
     id = db.Column(db.Integer, primary_key=True)
     first_name = db.Column(db.String(15), unique=False, nullable=False)
     last_name = db.Column(db.String(15), unique=False, nullable=False)
@@ -22,7 +23,8 @@ class User(db.Model):
             # do not serialize the password, its a security breach
         }
 
-class Planets(db.Model):
+class Planet(db.Model):
+    __tablename__ = 'Planet'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(120), nullable=False)
     population = db.Column(db.String(50), nullable=False)
@@ -39,6 +41,7 @@ class Planets(db.Model):
         }
 
 class People(db.Model):
+    __tablename__ = 'People'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(120), nullable=False)
     gender = db.Column(db.String(15), nullable=False)
@@ -54,4 +57,29 @@ class People(db.Model):
         "eye_color": self.eye_color,
         "skin_color": self.skin_color,
         "height": self.height
+        }
+
+
+class Favorites(db.Model):
+    __tablename__ = 'Favorites'
+    id = db.Column(db.Integer, primary_key=True)
+    people_id = db.Column(db.Integer, db.ForeignKey ('People.id'))
+    planet_id = db.Column(db.Integer, db.ForeignKey ('Planet.id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('User.id'))
+    people = db.relationship('People', lazy = True)
+    planet = db.relationship('Planet', lazy = True)
+    user = db.relationship('User', foreign_keys= [user_id])
+
+    
+    def __repr__(self):
+       
+        return f'<Favorites {self.people, self.planet_id}>'
+
+    def serialize(self):
+        return {
+            "id": self.id,
+            "people_id": self.people,
+            "planet_id": self.planet_id,
+            "user_id": self.user_id
+            # do not serialize the password, its a security breach
         }
